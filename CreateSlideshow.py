@@ -163,4 +163,5 @@ def create_slide(presentationId, type, body_text):
 if __name__ == "__main__":
     # Put the title of the presentation
     adminPresentation = create_presentation("[TEST] Diego Presentation")
-    create_slide(adminPresentation.get('presentationId'), "CALL_TO_WORSHIP", "In the early church, Lent was a time of preparation for baptism at Easter.")
+    pres_id = adminPresentation.get("presentationId")
+    create_slide(pres_id, "CALL_TO_WORSHIP", "In the early church, Lent was a time of preparation for baptism at Easter.")
