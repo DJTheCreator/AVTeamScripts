@@ -1,7 +1,7 @@
 from pypdf import PdfReader
 
 
-class ExtractFromPDF:
+class ExtractorClass:
     def __init__(self):
         reader = PdfReader("sunday.pdf")
         _bulletin = ''
@@ -21,7 +21,6 @@ class ExtractFromPDF:
                 else:
                     continue
         for line in section_list:
-            count = 0
             for char in line:
                 try:
                     end_index = line.index('   ')
@@ -47,13 +46,28 @@ class ExtractFromPDF:
                 section_content = self.bulletin[current_section_index:]
             if self.bulletin[current_section_index] == ' ':  # if next line is blank (current section has no content)
                 section_content = 'No Content'
+            section_content = self.clean_sections(section_content)
             section_content_list.append(section_content)
         return section_content_list
 
+    def clean_sections(self, content):
+        content = ''.join(content.splitlines())
+        content = ' '.join(content.split())
+        for word in content.split():
+            if 'pastor' in word.lower():
+                content = content.replace(word, '\n/p')
+            if 'leader' in word.lower():
+                content = content.replace(word, '\n/p')
+            if 'people' in word.lower():
+                content = content.replace(word, '\n/b')
+        content = content.lstrip()
+        return content
 
-extractor = ExtractFromPDF()
+
+extractor = ExtractorClass()
 sections = extractor.identify_sections()
 section_contents = extractor.match_content_with_section(sections)
-for section in sections:
-    print(section + "\n" + section_contents[sections.index(section)] + "\n\n\n")
-# TODO When using section names in CreateSlideshow.py remove * from string
+# print(section_contents[sections.index(sections[2])])
+# for section in sections:
+#     print(section + "\n" + section_contents[sections.index(section)] + "\n\n\n")
+# # TODO When using section names in CreateSlideshow.py remove * from string
